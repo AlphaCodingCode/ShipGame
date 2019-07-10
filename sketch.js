@@ -1,3 +1,6 @@
+// Any global variables can be defined up here
+
+
 /*
     Code in the setup function will only be run once at the start of the animation
 */

@@ -5,7 +5,7 @@ class BossShip {
         this.speed = 6;
         this.goingLeft = true;
         this.shield = 8;
-        this.sheildRegenerateCD = 60 * 10;
+        this.shieldRegenerateCD = 60 * 3.5;
         this.hp = 20;
         this.hit = false;
         this.particles = [];
@@ -27,15 +27,19 @@ class BossShip {
         }
         // update shield if been hit
         if (this.hit) {
-            this.sheild--;
+            if (this.shield > 0) {
+                this.shield--;
+            } else {
+                this.hp--;
+            }
             this.hit = false;
         }
-        // regenerate the sheild after 25 frames
-        if (this.sheild == 0) {
+        // regenerate the shield after 25 frames
+        if (this.shield == 0) {
             this.shieldRegenerateCD--;
-            if (this.sheildRegenerateCD == 0) {
-                this.sheild = 8;
-                this.sheildRegenerateCD = 60 * 10;
+            if (this.shieldRegenerateCD <= 0) {
+                this.shield = 8;
+                this.shieldRegenerateCD = 60 * 3.5;
             }
         }
         //shoot particles
@@ -58,7 +62,7 @@ class BossShip {
 
     }
 
-    hit() {
+    attacked() {
         this.hit = true;
     }
 

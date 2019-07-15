@@ -8,6 +8,8 @@ class BossShip {
         this.shieldRegenerateCD = 60 * 3.5;
         this.hp = 20;
         this.hit = false;
+        this.fireEdge = false;
+        this.prepareFire = false;
         this.particles = [];
     }
 
@@ -60,6 +62,18 @@ class BossShip {
             }
         }
 
+        // cannon fire on the edges of the map
+        if (this.x <= 120 || this.x >= width - 120) {
+            this.prepareFire = true;
+        } else {
+            this.prepareFire = false;
+        }
+        if (this.x <= 75 || this.x >= width - 75) {
+            this.fireEdge = true;
+        } else {
+            this.fireEdge = false;
+        }
+
     }
 
     attacked() {
@@ -79,13 +93,29 @@ class BossShip {
         fill(0);
         stroke(0);
         strokeWeight(1);
+
         // bullets
         fill(100, 0, 0);
         for (let i = 0; i < this.particles.length; i++) {
             ellipse(this.particles[i].x, this.particles[i].y, 20, 20);
         }
+        // beam attack
+        noStroke();
+        if (this.fireEdge) {
+            rectMode(CORNER);
+            fill(160, 160, 200);
+            rect(this.x - 25, this.y + 45, 50, height);
+            fill(255, 255, 255);
+            rect(this.x -15, this.y + 45, 30, height);
+            fill(random(200, 255), random(200, 255), random(200, 255));
+            ellipse(this.x, this.y + 45, random(30, 35), random(30, 35));
+        } else if (this.prepareFire) {
+            fill(random(200, 255), random(200, 255), random(200, 255));
+            ellipse(this.x, this.y + 45, random(30, 35), random(30, 35));
+        }
 
         // hp bar
+        stroke(0, 0, 0);
         rectMode(CENTER);
         fill(0,200, 0);
         rect(this.x, this.y - 60, this.hp * 5, 15);

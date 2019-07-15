@@ -11,6 +11,7 @@ class BossShip {
         this.fireEdge = false;
         this.prepareFire = false;
         this.particles = [];
+        this.noShoot = false;
     }
 
     update() {
@@ -45,8 +46,8 @@ class BossShip {
             }
         }
         //shoot particles
-        if (random(0, 100) < 20) {
-            this.particles.push({x : this.x, y : this.y, vec : createVector(random(-10, 10), 10)});
+        if (random(0, 100) < 20 && !this.noShoot) {
+            this.particles.push({x : this.x, y : this.y, vec : createVector(random(-12, 12), 10)});
         }
         for (let i = this.particles.length - 1; i >= 0; i--) {
             this.particles[i].y += this.particles[i].vec.y;
@@ -70,6 +71,10 @@ class BossShip {
         }
         if (this.x <= 75 || this.x >= width - 75) {
             this.fireEdge = true;
+            // cannon beam fire should be a one shot kill
+            if ((shipX <= 75 && this.x <= 75) || (this.x >= width - 75 && shipX >= width - 75)) {
+                setTimeout(killPlayerShip, 300);
+            }
         } else {
             this.fireEdge = false;
         }
@@ -78,6 +83,16 @@ class BossShip {
 
     attacked() {
         this.hit = true;
+    }
+
+    destroyed() {
+        if (this.hp <= 0) {
+            return true;
+        }
+    }
+
+    pacify() {
+        this.noShoot = true;
     }
 
     render() {
@@ -89,6 +104,11 @@ class BossShip {
             strokeWeight(3);
             stroke(255, 180, 180);
             ellipse(this.x, this.y, 120, 120);
+        } else {
+            fill(255, 255, 255);
+            textAlign(CENTER);
+            textSize(20);
+            text("SHIELDS DOWN", this.x, this.y);
         }
         fill(0);
         stroke(0);
@@ -120,4 +140,8 @@ class BossShip {
         fill(0,200, 0);
         rect(this.x, this.y - 60, this.hp * 5, 15);
     }
+}
+
+function killPlayerShip() {
+    shipHP = 0;
 }
